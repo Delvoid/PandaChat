@@ -6,18 +6,19 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import useSocket from '../hooks/useSocket';
 
 const Chat = () => {
-  const [username, setUsername] = useLocalStorage<string>('username', '');
-  const [room, setRoom] = useLocalStorage<string>('room', '');
   const socket = useSocket();
 
-  console.log({ username, room });
+  if (!socket) {
+    return <div>Error connecting to socket</div>;
+  }
+
   return (
     <div className="container mx-auto shadow-lg rounded-lg h-full flex flex-col">
       <ChatHeader />
 
       <div className="flex flex-row justify-between bg-white h-full">
         <ChatBar />
-        <ChatBody />
+        <ChatBody socket={socket} />
       </div>
     </div>
   );

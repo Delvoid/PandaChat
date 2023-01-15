@@ -1,7 +1,12 @@
 import { messages } from '../../utils/messagesMock';
 import Message from './Message';
-type Props = {};
-const ChatBody = (props: Props) => {
+import SendMessage from './SendMessage';
+import { Socket } from 'socket.io-client';
+
+type Props = {
+  socket: Socket;
+};
+const ChatBody = ({ socket }: Props) => {
   return (
     <div className="w-full px-5 flex flex-col justify-between">
       <div className="flex flex-col mt-5">
@@ -10,11 +15,7 @@ const ChatBody = (props: Props) => {
         ))}
       </div>
       <div className="py-5">
-        <input
-          className="w-full bg-gray-300 py-5 px-3 rounded-xl"
-          type="text"
-          placeholder="type your message here..."
-        />
+        <SendMessage socket={socket} />
       </div>
     </div>
   );

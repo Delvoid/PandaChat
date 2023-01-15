@@ -14,39 +14,23 @@ const roomName = 'testing room';
 
 io.on('connection', (socket) => {
   console.log('New websocket connection');
-  socket.emit('WS connection');
 
-  socket.join(roomName);
-  socket.on('create-room', (room) => {
-    console.log(room);
+  socket.on('join', ({ username, room }) => {
+    socket.join(roomName);
+    console.log({ username, room });
   });
 
   socket.emit('message', 'hello from server');
+
+  socket.on('sendMessage', (message: string) => {
+    console.log({ userId: socket.id, message });
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 });
 
-io.of('/').adapter.on('create-room', (room) => {
-  console.log(`room ${room} was created`);
-  console.log(io.sockets.adapter.rooms);
-});
-
-io.of('/').adapter.on('join-room', (room, id) => {
-  console.log(`socket ${id} has joined room ${room}`);
-  console.log(io.sockets.adapter.rooms);
-});
-
-io.of('/').adapter.on('leave-room', (room, id) => {
-  console.log(`socket ${id} has left room ${room}`);
-  console.log(io.sockets.adapter.rooms);
-});
-
-io.of('/').adapter.on('delete-room', (room) => {
-  console.log(`room ${room} was deleted`);
-  console.log(io.sockets.adapter.rooms);
-});
 server.listen(PORT, () => {
   console.log('info', `App listening on port ${PORT}`);
   console.info('================================');
