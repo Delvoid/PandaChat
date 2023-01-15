@@ -11,7 +11,12 @@ const ChatBar = (props: Props) => {
         <span className="text-xl">Users List</span>
       </div>
       {users.map(({ imgUrl, username, joinedAt }) => (
-        <UserListCard imgUrl={imgUrl} username={username} joinedAt={joinedAt} />
+        <UserListCard
+          key={username + joinedAt}
+          imgUrl={imgUrl}
+          username={username}
+          joinedAt={joinedAt}
+        />
       ))}
     </div>
   );
