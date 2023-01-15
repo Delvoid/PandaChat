@@ -2,16 +2,15 @@ import { SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import Input from '../components/form/Input';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 const Home = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string>();
-  const [room, setRoom] = useState<string>();
+  const [username, setUsername] = useLocalStorage<string>('username', '');
+  const [room, setRoom] = useLocalStorage<string>('room', '');
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     if (!username || !room) return;
-    localStorage.setItem('username', username);
-    localStorage.setItem('room', room);
     navigate('/chat');
   };
   return (
