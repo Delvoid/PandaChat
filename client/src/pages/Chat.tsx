@@ -13,7 +13,7 @@ const Chat = () => {
 
   return (
     <div className="container mx-auto shadow-lg rounded-lg h-full flex flex-col">
-      <ChatHeader />
+      <ChatHeader socket={socket} />
 
       <div className="flex flex-row justify-between bg-white h-full">
         <ChatBar />

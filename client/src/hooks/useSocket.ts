@@ -12,9 +12,9 @@ const useSocket = () => {
   useEffect(() => {
     const s = io('http://localhost:5000');
     if (!s || !username || !room) {
-      navigate('/');
       setUsername('');
       setRoom('');
+      navigate('/');
     }
     setSocket(s);
     s.emit('join', { username, room });
