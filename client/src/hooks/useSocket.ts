@@ -18,7 +18,13 @@ const useSocket = () => {
     }
     setSocket(s);
     s.emit('join', { username, room });
-    s.on('message', (message) => console.log(message));
+    s.on('serverDisconnect', () => {
+      s.disconnect();
+      navigate('/');
+      setUsername('');
+      setRoom('');
+    });
+    // s.on('message', (message) => console.log(message));
     return () => {
       s.disconnect();
     };

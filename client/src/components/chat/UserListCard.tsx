@@ -1,9 +1,11 @@
 export type User = {
+  id: string;
   imgUrl: string;
   username: string;
-  joinedAt: string;
+  joinedAt: number;
+  role: 'User' | 'Admin';
 };
-const UserListCard = ({ imgUrl, username, joinedAt }: User) => {
+const UserListCard = ({ imgUrl, username, joinedAt }: Omit<User, 'role'>) => {
   return (
     <div className="flex flex-row py-4 px-2 justify-center items-center border-b-2 gap-2">
       <div className="w-1/4">

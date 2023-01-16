@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import ChatBar from '../components/chat/ChatBar';
 import ChatBody from '../components/chat/ChatBody';
 import ChatHeader from '../components/chat/ChatHeader';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 import useSocket from '../hooks/useSocket';
 
 const Chat = () => {
