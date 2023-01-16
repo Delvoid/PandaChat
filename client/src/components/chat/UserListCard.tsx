@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export type User = {
   id: string;
   imgUrl: string;
@@ -13,7 +15,7 @@ const UserListCard = ({ imgUrl, username, joinedAt }: Omit<User, 'role'>) => {
       </div>
       <div className="w-full">
         <div className="text-lg font-semibold">{username}</div>
-        <span className="text-gray-500">{joinedAt}</span>
+        <span className="text-gray-500">{moment(joinedAt).format('hh:mma')}</span>
       </div>
     </div>
   );
