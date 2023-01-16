@@ -3,7 +3,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { generateMessage } from './utils/message';
-import { addUser, adminUser, getUser } from './utils/user';
+import { addUser, adminUser, getUser, getUsersInRoom, removeUser } from './utils/user';
 
 const app = express();
 app.use(cors());
@@ -31,6 +31,11 @@ io.on('connection', (socket) => {
     socket.broadcast
       .to(user.room)
       .emit('message', generateMessage(adminUser, `${user.username} has joined`));
+
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
   });
 
   socket.on('sendMessage', (message: string) => {
@@ -48,6 +53,15 @@ io.on('connection', (socket) => {
   });
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
+    const user = removeUser(socket.id);
+    if (user) {
+      // send message to room that user left
+      io.to(user.room).emit('message', generateMessage(adminUser, `${user.username} has left!`));
+      io.to(user.room).emit('roomData', {
+        room: user.room,
+        users: getUsersInRoom(user.room),
+      });
+    }
   });
 });
 
