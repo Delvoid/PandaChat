@@ -16,7 +16,7 @@ const Chat = () => {
       <ChatHeader socket={socket} />
 
       <div className="flex flex-row justify-between bg-white h-full">
-        <ChatBar />
+        <ChatBar socket={socket} />
         <ChatBody socket={socket} />
       </div>
     </div>
