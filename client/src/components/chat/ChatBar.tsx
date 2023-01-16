@@ -17,7 +17,7 @@ const ChatBar = ({ socket }: Props) => {
     eventAdded.current = true;
 
     socket.on('roomData', (room) => {
-      setUsers((prev) => [...room.users]);
+      setUsers([...room.users]);
     });
   }, []);
   return (
