@@ -10,6 +10,6 @@ export const whoIsTyping = (names: string[]): string => {
     case 3:
       return `${a}, ${b} and ${c} are typing...`;
     default:
-      return `${a}, ${b} and ${names.length - 2} are typing...`;
+      return `${a}, ${b} and ${names.length - 2} others are typing...`;
   }
 };
