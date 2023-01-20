@@ -17,14 +17,15 @@ const useSocket = () => {
       navigate('/');
     }
     setSocket(s);
+
     s.emit('join', { username, room });
+
     s.on('serverDisconnect', () => {
       s.disconnect();
       navigate('/');
       setUsername('');
       setRoom('');
     });
-    // s.on('message', (message) => console.log(message));
     return () => {
       s.disconnect();
     };

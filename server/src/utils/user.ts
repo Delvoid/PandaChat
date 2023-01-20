@@ -8,6 +8,7 @@ export type User = {
 };
 
 const users: User[] = [];
+const isTypingList: Record<string, string[]> = {};
 
 const defaultAvatar = 'https://source.unsplash.com/_7LbC5J-jw4/600x600';
 
@@ -70,5 +71,44 @@ export const removeUser = (id: string) => {
   const index = users.findIndex((user) => user.id === id);
   if (index !== -1) {
     return users.splice(index, 1)[0];
+  }
+};
+
+export const addUserIsTyping = (username: string, room: string) => {
+  // validate the data
+  if (!username || !room) {
+    return {
+      error: 'Username and room are required!',
+    };
+  }
+
+  room = room.trim().toLowerCase();
+
+  if (isTypingList[room]) {
+    if (isTypingList[room].includes(username)) return;
+    isTypingList[room].push(username);
+  } else {
+    isTypingList[room] = [username];
+  }
+  console.log(isTypingList);
+};
+
+export const removeUserIsTyping = (username: string, room: string) => {
+  room = room.trim().toLowerCase();
+  if (room in isTypingList) {
+    isTypingList[room] = isTypingList[room].filter((item) => item !== username);
+  }
+};
+
+export const getUsersInRoomTyping = (room: string) => {
+  room = room.trim().toLowerCase();
+  if (room in isTypingList) return isTypingList[room];
+  return [];
+};
+
+export const roomDisconnecting = (room: string) => {
+  room = room.trim().toLowerCase();
+  if (room in isTypingList) {
+    delete isTypingList[room];
   }
 };

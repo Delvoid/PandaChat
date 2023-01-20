@@ -3,7 +3,17 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import { generateMessage } from './utils/message';
-import { addUser, adminUser, getUser, getUsersInRoom, removeUser } from './utils/user';
+import {
+  addUser,
+  addUserIsTyping,
+  adminUser,
+  getUser,
+  getUsersInRoom,
+  getUsersInRoomTyping,
+  removeUser,
+  removeUserIsTyping,
+  roomDisconnecting,
+} from './utils/user';
 
 const app = express();
 app.use(cors());
@@ -16,6 +26,7 @@ io.on('connection', (socket) => {
   console.log(`New websocket connection: ${socket.id}`);
 
   socket.on('join', ({ username, room }) => {
+    console.log(username);
     const { error, user } = addUser({ id: socket.id, username, room });
     if (error) {
       return error;
@@ -25,7 +36,6 @@ io.on('connection', (socket) => {
     }
 
     socket.join(user.room);
-    console.log({ username, room });
 
     socket.emit('message', generateMessage(adminUser, 'Welcome!'));
     socket.broadcast
@@ -35,6 +45,28 @@ io.on('connection', (socket) => {
     io.to(user.room).emit('roomData', {
       room: user.room,
       users: getUsersInRoom(user.room),
+    });
+  });
+
+  socket.on('isTyping', (isTyping: boolean) => {
+    const user = getUser(socket.id);
+    if (!user) return;
+
+    console.log(`${user?.username} ${isTyping ? 'started typing' : 'stopped typing'}`);
+    console.log(user.room);
+
+    //add to typing list
+    if (isTyping) {
+      addUserIsTyping(user.username, user.room);
+    }
+    if (!isTyping) {
+      removeUserIsTyping(user.username, user.room);
+    }
+
+    //emit data to server
+    io.to(user.room).emit('isTypingData', {
+      room: user.room,
+      isTyping: getUsersInRoomTyping(user.room),
     });
   });
 
@@ -55,6 +87,11 @@ io.on('connection', (socket) => {
     console.log(`User disconnected: ${socket.id}`);
     const user = removeUser(socket.id);
     if (user) {
+      removeUserIsTyping(user.username, user.room);
+      io.to(user.room).emit('isTypingData', {
+        room: user.room,
+        isTyping: getUsersInRoomTyping(user.room),
+      });
       // send message to room that user left
       io.to(user.room).emit('message', generateMessage(adminUser, `${user.username} has left!`));
       io.to(user.room).emit('roomData', {

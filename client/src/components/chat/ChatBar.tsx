@@ -10,7 +10,6 @@ type Props = {
 const ChatBar = ({ socket }: Props) => {
   const eventAdded = useRef(false);
   const [users, setUsers] = useState<User[]>([]);
-  console.log(users);
   useEffect(() => {
     if (!socket) return;
     if (eventAdded.current) return;
