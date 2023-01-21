@@ -9,11 +9,6 @@ const Chat = () => {
   const socket = useSocket();
   const bots = useBots(10);
 
-  useEffect(() => {
-    if (bots.length === 0) return;
-    randomChat(bots);
-  }, [bots]);
-
   if (!socket) {
     return <div>Error connecting to socket</div>;
   }

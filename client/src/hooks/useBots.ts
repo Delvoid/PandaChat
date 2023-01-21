@@ -34,7 +34,7 @@ const useBots = (count = 5) => {
       connectBot();
     }
   }, []);
-  //   randomChat(bots);
+  randomChat(bots);
   return bots;
 };
 export default useBots;
@@ -51,5 +51,10 @@ export const randomChat = (bots: { socket: Socket; botName: string }[]) => {
         }, 3000);
       }
     }, 1000);
+    setInterval(() => {
+      if (Math.random() < 1 / 100) {
+        bot.socket.emit('sendMessage', 'Test message');
+      }
+    }, 5000);
   });
 };
