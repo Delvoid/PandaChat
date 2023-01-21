@@ -1,12 +1,18 @@
+import { useEffect } from 'react';
 import ChatBar from '../components/chat/ChatBar';
 import ChatBody from '../components/chat/ChatBody';
 import ChatHeader from '../components/chat/ChatHeader';
-import useBots from '../hooks/useBots';
+import useBots, { randomChat } from '../hooks/useBots';
 import useSocket from '../hooks/useSocket';
 
 const Chat = () => {
   const socket = useSocket();
-  const bots = useBots();
+  const bots = useBots(10);
+
+  useEffect(() => {
+    if (bots.length === 0) return;
+    randomChat(bots);
+  }, [bots]);
 
   if (!socket) {
     return <div>Error connecting to socket</div>;
